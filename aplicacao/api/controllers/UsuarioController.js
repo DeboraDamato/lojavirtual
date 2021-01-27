@@ -14,7 +14,8 @@ class UsuarioController {
 
     // GET /:id
     show(req, res, next){
-        Usuario.findById(req.params.id).populate({ path: "loja" })
+        Usuario.findById(req.params.id)
+        //.populate({ path: "loja" })
         .then(usuario => {
             if(usuario) return res.status(401).json({ errors: "usuario não registrado"});
             return res.json({
@@ -28,10 +29,11 @@ class UsuarioController {
         }).catch(next);
     }
 
+    // POST /registrar
     store(req, res, next){
         const { nome, email, password, loja } = req.body;
 
-        if( !nome || !email || !password || !loja ) return res.status(422).json({ errors: "Preencha todos os campos de cadastro" });
+          if( !nome || !email || !password || !loja ) return res.status(422).json({ errors: "Preencha todos os campos de cadastro" });
 
         const usuario = new Usuario({ nome, email, loja });
         usuario.setSenha(password);
@@ -43,7 +45,6 @@ class UsuarioController {
             next(err);
         });
     }
-
 
      //PUT /
 
@@ -106,8 +107,8 @@ class UsuarioController {
             }).catch(next);
         }).catch(next);
     }
+    
     // GET /senha-recuperada
-
     showCompleteRecovery(req, res, next){
         if(!req.query.token) return res.render("recovery", { error: "Token não identificado", success: null });
         Usuario.findOne({ "recovery.token": req.query.token }).then(usuario => {
@@ -118,7 +119,6 @@ class UsuarioController {
     }
 
     // POST / senha-recuperada
-
     completeRecovery(req, res, next){
         const { token, password } = req.body;
         if(!token || !password) return res.render("recovery/store", { error: "Preencha novamente com sua nova senha", success: null, token: token});
