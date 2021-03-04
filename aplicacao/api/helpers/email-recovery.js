@@ -1,5 +1,5 @@
 const transporter = require("nodemailer").createTransport(require("../config/email"));
-const { root: link } = require("../config/index");
+const { api: link } = require("../config/index");
 
 module.exports = ({ usuario, recovery}, cb) => {
     const message = `
